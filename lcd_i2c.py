@@ -103,8 +103,15 @@ def handler_stop_signals(signum, frame):
 
 def main():
   # Main program block
+  global LCD_BACKLIGHT
+
   signal.signal(signal.SIGINT, handler_stop_signals)
   signal.signal(signal.SIGTERM, handler_stop_signals)
+
+  display_on_begin = "07:30:00"
+  display_on_end = "21:30:00"
+  display_on_begin_t = datetime.strptime(display_on_begin, "%H:%M:%S")
+  display_on_end_t = datetime.strptime(display_on_end, "%H:%M:%S")
 
   # Initialise display
   lcd_init()
@@ -112,8 +119,18 @@ def main():
 
   while run:
     now = datetime.now()
+
+    display_on_begin_t = now.replace(hour=display_on_begin_t.time().hour, minute=display_on_begin_t.time().minute, second=0, microsecond=0)
+    display_on_end_t = now.replace(hour=display_on_end_t.time().hour, minute=display_on_end_t.time().minute, second=0, microsecond=0)
+
+    if display_on_begin_t <= now <= display_on_end_t:
+      LCD_BACKLIGHT  = 0x08
+    else:
+      LCD_BACKLIGHT  = 0x00
+
     lcd_string(now.strftime("%d/%m %H:%M:%S"), LCD_LINE_1)
-    lcd_string(get_interface_ipaddress('wlx60e327156ac4'), LCD_LINE_2)
+    lcd_string(get_interface_ipaddress('wlx200bd036e4ab'), LCD_LINE_2)
+    #lcd_string(get_interface_ipaddress('wlx60e327156ac4'), LCD_LINE_2)
     time.sleep(1)
 
   lcd_string("STOPPED", LCD_LINE_1)

@@ -15,7 +15,7 @@ import signal
 from datetime import datetime
 
 # Define some device parameters
-I2C_ADDR  = 0x27 # I2C device address
+I2C_ADDR  = 0x3F # 0x27 # I2C device address
 LCD_WIDTH = 16   # Maximum characters per line
 
 # Define some device constants
